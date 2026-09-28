@@ -52,8 +52,7 @@
   .slide.active{opacity:1}
   .slide .bg{position:absolute;inset:0;background:#000}
   .slide .content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 30px}
-  .slide .content .ic{width:64px;height:64px;border-radius:16px;background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px;backdrop-filter:blur(4px)}
-  .slide .content h4{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+  .slide .content h4{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
   .slide .content p{color:#8b949e;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
   .slide .caption{position:absolute;bottom:26px;left:28px;color:#666;font-size:11px;letter-spacing:2px;text-transform:uppercase;z-index:3}
   .slide .caption::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#5b8def;margin-right:8px;vertical-align:middle}
@@ -217,7 +216,6 @@
         <div class="slide s1 active">
           <div class="bg"></div>
           <div class="content">
-            <div class="ic">🖥</div>
             <h4>Сборка дня · Тест 2</h4>
             <p>1440p · 84 000 ₽</p>
           </div>
@@ -226,7 +224,6 @@
         <div class="slide s2">
           <div class="bg"></div>
           <div class="content">
-            <div class="ic">⚡</div>
             <h4>Топ-сборка · Тест 3</h4>
             <p>4K · 134 000 ₽</p>
           </div>
@@ -235,7 +232,6 @@
         <div class="slide s3">
           <div class="bg"></div>
           <div class="content">
-            <div class="ic">🛠</div>
             <h4>Рабочее место</h4>
             <p>Москва · ул. Примерная</p>
           </div>
@@ -244,7 +240,6 @@
         <div class="slide s4">
           <div class="bg"></div>
           <div class="content">
-            <div class="ic">💬</div>
             <h4>Отзыв клиента</h4>
             <p>Иван · Екатеринбург</p>
           </div>
@@ -436,7 +431,7 @@
     <div><div class="logo">TEST<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года. 2400+ довольных клиентов. Гарантия 3 года на все сборки.</p></div>
     <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a><a href="catalog.html">Комплектующие</a></div>
     <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
-    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@testbuild.ru">info@testbuild.ru</a></div>
   </div>
   <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TestBuild. Все права защищены.</span></div>
 </footer>
@@ -543,34 +538,6 @@ function showToast(text) {
 document.querySelectorAll('nav a').forEach(a => {
   a.addEventListener('click', () => document.querySelector('nav').classList.remove('mobile-open'));
 });
-
-(async () => {
-  try {
-    await PCBuilds.syncFromCloud();
-    const userBuilds = PCBuilds.getUserBuilds();
-    if (userBuilds.length === 0) return;
-    const grid = document.getElementById('buildsGrid');
-    const builds = PCBuilds.getAll().slice(0, 6);
-    grid.innerHTML = builds.map(b => `
-      <div class="card">
-        <div class="card-img">${b.photo ? `<img src="${b.photo}" alt="">` : '<span>Фото</span>'}</div>
-        <div class="card-tag">${b.tag || ''}</div>
-        <h3>${b.name}</h3>
-        <div class="desc">${b.desc || ''}</div>
-        <ul class="specs">
-          ${b.cpu ? `<li>Процессор <span>${b.cpu}</span></li>` : ''}
-          ${b.gpu ? `<li>Видеокарта <span>${b.gpu}</span></li>` : ''}
-          ${b.ram ? `<li>Память <span>${b.ram}</span></li>` : ''}
-          ${b.storage ? `<li>Накопитель <span>${b.storage}</span></li>` : ''}
-        </ul>
-        <div class="card-bottom">
-          <div class="price">${b.price.toLocaleString('ru-RU')} ₽</div>
-          <button class="buy" onclick="addToCart('${b.name}')">В корзину</button>
-        </div>
-      </div>
-    `).join('');
-  } catch(e) { console.warn('Cloud sync skipped', e); }
-})();
 </script>
 
 </body>
