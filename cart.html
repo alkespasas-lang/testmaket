@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Корзина — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  button,input{font-family:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px;align-items:center}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px;transition:.2s}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+  .page-head{padding:60px 40px 30px;max-width:1200px;margin:0 auto}
+  .page-head h1{font-size:44px;font-weight:800;letter-spacing:-1.5px}
+  .cart-layout{max-width:1200px;margin:0 auto;padding:20px 40px 80px;display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start}
+  .items{display:flex;flex-direction:column;gap:14px}
+  .item{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:18px;display:grid;grid-template-columns:100px 1fr auto;gap:18px;align-items:center}
+  .item-img{width:100px;height:80px;background:#000;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .item-img span{color:#333;font-size:10px;text-transform:uppercase;letter-spacing:1.5px}
+  .item-info h3{font-size:16px;margin-bottom:4px}
+  .item-info .sub{color:#888;font-size:13px}
+  .item-right{text-align:right}
+  .item-right .price{font-size:18px;font-weight:800;margin-bottom:10px}
+  .qty{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+  .qty button{width:28px;height:28px;background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;border-radius:6px;cursor:pointer;font-size:14px}
+  .qty button:hover{background:#5b8def;border-color:#5b8def}
+  .qty .num{min-width:24px;text-align:center;font-size:14px}
+  .remove{color:#666;font-size:12px;cursor:pointer;margin-top:8px;background:none;border:none}
+  .remove:hover{color:#ff4d6d}
+  .empty{text-align:center;padding:80px 20px;color:#666}
+  .empty h3{font-size:20px;color:#fff;margin-bottom:12px}
+  .empty a{display:inline-block;margin-top:20px;background:#5b8def;color:#fff;padding:12px 24px;border-radius:10px;font-weight:600}
+  .checkout{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:24px;position:sticky;top:100px}
+  .checkout h3{font-size:18px;margin-bottom:20px}
+  .row{display:flex;justify-content:space-between;padding:10px 0;font-size:14px;border-bottom:1px solid #161616}
+  .row:last-of-type{border-bottom:none}
+  .row .lbl{color:#888}
+  .row .val{color:#fff;font-weight:600}
+  .total-row{padding-top:16px;margin-top:8px;border-top:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center}
+  .total-row .lbl{font-size:14px;color:#888}
+  .total-row .amount{font-size:26px;font-weight:800;letter-spacing:-1px}
+  .checkout button{width:100%;margin-top:20px;background:#5b8def;color:#fff;border:none;padding:15px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
+  .checkout button:hover{background:#4070d6}
+  .promo{margin-top:16px;display:flex;gap:8px}
+  .promo input{flex:1;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:11px 14px;color:#fff;font-size:13px;outline:none}
+  .promo button{width:auto;margin:0;padding:0 16px;background:#1a1a1a;color:#fff;border:1px solid #2a2a2a;font-size:13px}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px;margin-top:60px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px;font-weight:700}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;margin-top:14px}
+  .footer-bottom{max-width:1200px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#5b8def;color:#fff;padding:13px 24px;border-radius:10px;font-weight:600;font-size:14px;transition:.3s;z-index:300}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .page-head{padding:40px 20px 20px}
+    .page-head h1{font-size:30px}
+    .cart-layout{grid-template-columns:1fr;padding:10px 20px 50px}
+    .checkout{position:static}
+    .item{grid-template-columns:80px 1fr}
+    .item-img{width:80px;height:64px}
+    .item-right{grid-column:1/-1;text-align:left;display:flex;justify-content:space-between;align-items:center}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html">Конфигуратор</a>
+    <a href="cart.html" class="active">Корзина</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+</header>
+
+<div class="page-head"><h1>Корзина</h1></div>
+
+<div class="cart-layout">
+  <div class="items" id="items"></div>
+  <div class="checkout" id="checkout">
+    <h3>Итого</h3>
+    <div class="row"><span class="lbl">Товары</span><span class="val" id="sum-products">0 ₽</span></div>
+    <div class="row"><span class="lbl">Доставка</span><span class="val">Бесплатно</span></div>
+    <div class="row"><span class="lbl">Сборка</span><span class="val">Бесплатно</span></div>
+    <div class="promo"><input type="text" placeholder="Промокод"><button onclick="showToast('Промокод не найден')">ОК</button></div>
+    <div class="total-row"><span class="lbl">К оплате</span><span class="amount" id="total">0 ₽</span></div>
+    <button onclick="checkout()">Оформить заказ</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<div class="toast" id="toast">Готово</div>
+
+<script src="transition.js"></script>
+<script>
+let items=[
+  {id:1,name:'Balance',sub:'Сборка для 1440p',price:84000,qty:1},
+  {id:2,name:'32GB DDR5 6000',sub:'2×16GB · 6000 МГц',price:10500,qty:1}
+];
+
+function render(){
+  const el=document.getElementById('items');
+  if(!items.length){
+    el.innerHTML=`<div class="empty"><h3>Корзина пуста</h3><p>Добавь что-нибудь из каталога или собери ПК в конфигураторе</p><a href="catalog.html">Перейти в каталог</a></div>`;
+    document.getElementById('checkout').style.display='none';
+    return;
+  }
+  document.getElementById('checkout').style.display='block';
+  el.innerHTML=items.map(i=>`
+    <div class="item">
+      <div class="item-img"><span>Фото</span></div>
+      <div class="item-info"><h3>${i.name}</h3><div class="sub">${i.sub}</div></div>
+      <div class="item-right">
+        <div class="price">${(i.price*i.qty).toLocaleString('ru-RU')} ₽</div>
+        <div class="qty">
+          <button onclick="changeQty(${i.id},-1)">−</button>
+          <span class="num">${i.qty}</span>
+          <button onclick="changeQty(${i.id},1)">+</button>
+        </div>
+        <button class="remove" onclick="removeItem(${i.id})">Удалить</button>
+      </div>
+    </div>`).join('');
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('sum-products').textContent=total.toLocaleString('ru-RU')+' ₽';
+  document.getElementById('total').textContent=total.toLocaleString('ru-RU')+' ₽';
+}
+function changeQty(id,d){const i=items.find(x=>x.id===id);if(!i)return;i.qty+=d;if(i.qty<1)i.qty=1;render()}
+function removeItem(id){items=items.filter(i=>i.id!==id);render();showToast('Товар удалён')}
+function checkout(){if(!items.length)return;showToast('Заказ оформлен! Менеджер свяжется');setTimeout(()=>{items=[];render()},1500)}
+function showToast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove('show'),2200)}
+
+render();
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+</script>
+
+</body>
+</html>

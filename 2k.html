@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2K сборки — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  button{font-family:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px;align-items:center}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px;transition:.2s}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:6px 10px}
+  .page-head{padding:60px 40px 30px;max-width:1240px;margin:0 auto}
+  .back{color:#888;font-size:14px;margin-bottom:20px;display:inline-block;transition:.2s}
+  .back:hover{color:#5b8def}
+  .page-head h1{font-size:48px;font-weight:800;letter-spacing:-1.5px}
+  .page-head h1 span{color:#5b8def}
+  .page-head p{color:#888;font-size:17px;margin-top:14px;max-width:500px}
+  .grid{max-width:1240px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:18px;transition:transform .5s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s;display:flex;flex-direction:column;opacity:0;transform:translateY(30px)}
+  .card.visible{opacity:1;transform:translateY(0)}
+  .card:nth-child(2).visible{transition-delay:.08s}
+  .card:nth-child(3).visible{transition-delay:.16s}
+  .card:hover{border-color:#5b8def;transform:translateY(-8px);box-shadow:0 24px 70px rgba(91,141,239,.18)}
+  .card-img{height:180px;background:#000;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;overflow:hidden}
+  .card-img span{color:#333;font-size:12px;text-transform:uppercase;letter-spacing:2px}
+  .card-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s ease-out}
+  .card:hover .card-img img{transform:scale(1.08)}
+  .card-tag{color:#5b8def;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px}
+  .card h3{font-size:18px;font-weight:700;margin-bottom:4px}
+  .card .desc{color:#888;font-size:13px;margin-bottom:16px}
+  .specs{list-style:none;margin-bottom:20px;flex-grow:1}
+  .specs li{color:#aaa;font-size:13px;padding:6px 0;border-bottom:1px solid #161616;display:flex;justify-content:space-between}
+  .specs li:last-child{border-bottom:none}
+  .specs li span{color:#555}
+  .card-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid #161616;gap:12px}
+  .price{font-size:20px;font-weight:800;letter-spacing:-.5px}
+  .buy{background:#1a1a1a;color:#5b8def;border:1px solid #2a2a2a;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:.25s}
+  .buy:hover{background:#5b8def;color:#fff;border-color:#5b8def}
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#666}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px;margin-top:60px}
+  .footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px;font-weight:700}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px;transition:.2s}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;line-height:1.7;margin-top:14px}
+  .footer-bottom{max-width:1240px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#5b8def;color:#fff;padding:13px 24px;border-radius:10px;font-weight:600;font-size:14px;transition:.4s cubic-bezier(.34,1.56,.64,1);z-index:300}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .page-head{padding:40px 20px 20px}
+    .page-head h1{font-size:30px}
+    .grid{grid-template-columns:1fr;padding:0 20px 50px}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html" class="active">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html">Конфигуратор</a>
+    <a href="cart.html">Корзина</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+</header>
+
+<div class="page-head">
+  <a href="index.html" class="back">← Назад на главную</a>
+  <h1>Сборки для <span>2K</span></h1>
+  <p>2560 × 1440. Высокие настройки и 100+ FPS. Оптимальный баланс цены и качества.</p>
+</div>
+
+<div class="grid" id="catGrid"></div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года. Гарантия 3 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<div class="toast" id="toast">Готово</div>
+
+<script src="transition.js"></script>
+<script>
+function showToast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove('show'),2200)}
+let cart=0;function addToCart(n){cart++;showToast(n+' — добавлен в корзину')}
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+
+(async () => {
+  try { await PCBuilds.syncFromCloud(); } catch(e) {}
+  const grid = document.getElementById('catGrid');
+  const cat = '2k';
+  const builds = PCBuilds.getAll().filter(b => b.category === cat);
+  if (builds.length === 0) {
+    grid.innerHTML = '<div class="empty">Пока нет сборок в этой категории</div>';
+    return;
+  }
+  grid.innerHTML = builds.map(b => `
+    <div class="card">
+      <div class="card-img">${b.photo ? `<img src="${b.photo}" alt="">` : '<span>Фото</span>'}</div>
+      <div class="card-tag">${b.tag || ''}</div>
+      <h3>${b.name}</h3>
+      <div class="desc">${b.desc || ''}</div>
+      <ul class="specs">
+        ${b.cpu ? `<li>Процессор <span>${b.cpu}</span></li>` : ''}
+        ${b.motherboard ? `<li>Материнка <span>${b.motherboard}</span></li>` : ''}
+        ${b.gpu ? `<li>Видеокарта <span>${b.gpu}</span></li>` : ''}
+        ${b.ram ? `<li>Память <span>${b.ram}</span></li>` : ''}
+        ${b.storage ? `<li>Накопитель <span>${b.storage}</span></li>` : ''}
+        ${b.psu ? `<li>БП <span>${b.psu}</span></li>` : ''}
+        ${b.case ? `<li>Корпус <span>${b.case}</span></li>` : ''}
+        ${b.cooling ? `<li>Охлаждение <span>${b.cooling}</span></li>` : ''}
+      </ul>
+      <div class="card-bottom">
+        <div class="price">${b.price.toLocaleString('ru-RU')} ₽</div>
+        <button class="buy" onclick="addToCart('${b.name}')">В корзину</button>
+      </div>
+    </div>
+  `).join('');
+  setTimeout(() => grid.querySelectorAll('.card').forEach((c, i) => {
+    setTimeout(() => c.classList.add('visible'), i * 100);
+  }), 50);
+})();
+</script>
+
+</body>
+</html>

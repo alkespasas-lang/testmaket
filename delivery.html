@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Доставка и оплата — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6}
+  a{text-decoration:none;color:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+  .wrap{max-width:900px;margin:0 auto;padding:60px 40px 80px}
+  h1{font-size:44px;font-weight:800;letter-spacing:-1.5px;margin-bottom:20px}
+  h1 span{color:#5b8def}
+  h2{font-size:22px;margin:40px 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .block{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:24px}
+  .block h3{font-size:17px;margin-bottom:10px}
+  .block p{color:#888;font-size:14px}
+  .block .price-row{margin-top:14px;padding-top:14px;border-top:1px solid #1a1a1a;display:flex;justify-content:space-between;font-size:14px}
+  .block .price-row .v{color:#fff;font-weight:700}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;margin-top:14px}
+  .footer-bottom{max-width:1200px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .wrap{padding:40px 20px 60px}
+    h1{font-size:30px}
+    .grid{grid-template-columns:1fr}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html">Конфигуратор</a>
+    <a href="cart.html">Корзина</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1>Доставка и <span>оплата</span></h1>
+
+  <h2>Доставка</h2>
+  <div class="grid">
+    <div class="block"><h3>По Москве</h3><p>Курьером в день сборки. Проверка при получении.</p><div class="price-row"><span>Стоимость</span><span class="v">Бесплатно</span></div></div>
+    <div class="block"><h3>По России</h3><p>СДЭК или другая ТК. Страховка на полную стоимость.</p><div class="price-row"><span>Стоимость</span><span class="v">от 500 ₽</span></div></div>
+    <div class="block"><h3>Самовывоз</h3><p>Из офиса: Москва, ул. Примерная, 1, офис 24.</p><div class="price-row"><span>Стоимость</span><span class="v">Бесплатно</span></div></div>
+    <div class="block"><h3>Сроки</h3><p>Готовые сборки — 1–2 дня. Кастом — 3–5 дней. По России +3–7 дней.</p></div>
+  </div>
+
+  <h2>Оплата</h2>
+  <div class="grid">
+    <div class="block"><h3>Картой онлайн</h3><p>Visa, Mastercard, МИР. Через защищённый шлюз.</p></div>
+    <div class="block"><h3>СБП</h3><p>По QR-коду через приложение банка. Без комиссии.</p></div>
+    <div class="block"><h3>Наличными курьеру</h3><p>При получении. Сначала проверяете — потом платите.</p></div>
+    <div class="block"><h3>Рассрочка</h3><p>От банков-партнёров на 3–12 месяцев. Без скрытых процентов.</p></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<script src="transition.js"></script>
+<script>
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+</script>
+
+</body>
+</html>

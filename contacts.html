@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  button,input,textarea{font-family:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px;align-items:center}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px;transition:.2s}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+  .page-head{padding:60px 40px 30px;max-width:1200px;margin:0 auto}
+  .page-head h1{font-size:44px;font-weight:800;letter-spacing:-1.5px}
+  .page-head h1 span{color:#5b8def}
+  .page-head p{color:#888;font-size:16px;margin-top:12px}
+  .layout{max-width:1200px;margin:0 auto;padding:20px 40px 80px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .info-list{display:flex;flex-direction:column;gap:8px}
+  .info-item{display:flex;align-items:center;gap:16px;padding:18px 20px;background:#111;border:1px solid #1a1a1a;border-radius:14px}
+  .info-icon{width:44px;height:44px;background:#1a1a1a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#5b8def;font-weight:700;flex-shrink:0}
+  .info-item .lbl{color:#666;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+  .info-item .val{font-size:16px;margin-top:3px}
+  .info-item a:hover{color:#5b8def}
+  .messengers{margin-top:24px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .messengers a{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:14px 18px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:.2s}
+  .messengers a:hover{border-color:#5b8def;color:#5b8def}
+  .form-card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:32px}
+  .form-card h3{font-size:22px;margin-bottom:8px}
+  .form-card p{color:#888;font-size:14px;margin-bottom:22px}
+  .form-card input,.form-card textarea{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:14px 16px;color:#fff;font-size:14px;outline:none;margin-bottom:12px;transition:.2s;font-family:inherit}
+  .form-card input:focus,.form-card textarea:focus{border-color:#5b8def}
+  .form-card textarea{resize:vertical;min-height:120px}
+  .form-card button{width:100%;background:#5b8def;color:#fff;border:none;padding:15px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;transition:.2s}
+  .form-card button:hover{background:#4070d6}
+  .map{max-width:1200px;margin:0 auto;padding:0 40px 80px}
+  .map-frame{background:#111;border:1px solid #1a1a1a;border-radius:16px;height:340px;display:flex;align-items:center;justify-content:center;color:#444;font-size:14px;letter-spacing:1px}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px;margin-top:60px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px;font-weight:700}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;margin-top:14px}
+  .footer-bottom{max-width:1200px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#5b8def;color:#fff;padding:13px 24px;border-radius:10px;font-weight:600;font-size:14px;transition:.3s;z-index:300}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .page-head{padding:40px 20px 20px}
+    .page-head h1{font-size:30px}
+    .layout{grid-template-columns:1fr;padding:10px 20px 50px}
+    .map{padding:0 20px 50px}
+    .messengers{grid-template-columns:1fr}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html">Конфигуратор</a>
+    <a href="cart.html">Корзина</a>
+    <a href="contacts.html" class="active">Контакты</a>
+  </nav>
+</header>
+
+<div class="page-head">
+  <h1>Свяжитесь <span>с нами</span></h1>
+  <p>Ответим в течение часа. Поможем подобрать сборку под ваш бюджет.</p>
+</div>
+
+<div class="layout">
+  <div>
+    <div class="info-list">
+      <div class="info-item"><div class="info-icon">Т</div><div><div class="lbl">Телефон</div><div class="val"><a href="tel:+79991234567">+7 (999) 123-45-67</a></div></div></div>
+      <div class="info-item"><div class="info-icon">@</div><div><div class="lbl">Email</div><div class="val"><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div></div></div>
+      <div class="info-item"><div class="info-icon">А</div><div><div class="lbl">Адрес</div><div class="val">Москва, ул. Примерная, 1, офис 24</div></div></div>
+      <div class="info-item"><div class="info-icon">Ч</div><div><div class="lbl">Режим работы</div><div class="val">Пн–Вс, 10:00 – 21:00</div></div></div>
+    </div>
+    <div class="messengers">
+      <a href="#" onclick="showToast('Telegram'); return false;">Telegram</a>
+      <a href="#" onclick="showToast('WhatsApp'); return false;">WhatsApp</a>
+      <a href="#" onclick="showToast('VK'); return false;">ВКонтакте</a>
+      <a href="#" onclick="showToast('YouTube'); return false;">YouTube</a>
+    </div>
+  </div>
+  <div class="form-card">
+    <h3>Оставить заявку</h3>
+    <p>Заполните форму — перезвоним в течение 15 минут</p>
+    <input type="text" id="c-name" placeholder="Ваше имя">
+    <input type="tel" id="c-phone" placeholder="Телефон или Telegram">
+    <textarea id="c-msg" placeholder="Опишите задачу или бюджет..."></textarea>
+    <button onclick="sendForm()">Отправить</button>
+  </div>
+</div>
+
+<div class="map"><div class="map-frame">Карта — вставим после запуска</div></div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<div class="toast" id="toast">Отправлено</div>
+
+<script src="transition.js"></script>
+<script>
+function sendForm(){
+  const n=document.getElementById('c-name').value.trim();
+  const p=document.getElementById('c-phone').value.trim();
+  if(!n||!p){showToast('Заполни имя и контакт');return}
+  showToast('Заявка отправлена! Перезвоним скоро');
+  document.getElementById('c-name').value='';
+  document.getElementById('c-phone').value='';
+  document.getElementById('c-msg').value='';
+}
+function showToast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove('show'),2200)}
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+</script>
+
+</body>
+</html>

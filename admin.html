@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ-панель — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  button,input,select,textarea{font-family:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  .header-right{display:flex;gap:8px;align-items:center}
+  .back-link,.logout{color:#888;font-size:14px;padding:9px 16px;border-radius:8px;transition:.2s;background:none;border:none;cursor:pointer}
+  .back-link:hover{color:#fff;background:#1a1a1a}
+  .logout:hover{color:#ff4d6d;background:#1a1a1a}
+  .wrap{max-width:1400px;margin:0 auto;padding:40px;display:grid;grid-template-columns:460px 1fr;gap:40px;align-items:start}
+  h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  .subtitle{color:#888;font-size:14px;margin-bottom:30px}
+  .cloud-card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:22px;margin-bottom:20px}
+  .cloud-card h3{font-size:15px;margin-bottom:10px}
+  .cloud-card .status{font-size:12px;color:#3fb950;margin-bottom:14px}
+  .cloud-card .status.off{color:#888}
+  .cloud-card .row{display:flex;gap:8px}
+  .cloud-card input{flex:1;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:10px 12px;color:#fff;font-size:13px;outline:none;font-family:monospace}
+  .cloud-card input:focus{border-color:#5b8def}
+  .cloud-card button{background:#5b8def;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s;white-space:nowrap}
+  .cloud-card button:hover{background:#4070d6}
+  .cloud-card button.ghost{background:#1a1a1a;border:1px solid #2a2a2a;color:#ccc}
+  .cloud-card button.ghost:hover{border-color:#5b8def;color:#5b8def}
+  .cloud-card .hint{color:#666;font-size:12px;margin-top:10px;line-height:1.6}
+  .form-card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:28px;position:sticky;top:100px;max-height:calc(100vh - 120px);overflow-y:auto}
+  .form-card h2{font-size:18px;margin-bottom:22px}
+  .field{margin-bottom:16px}
+  .field label{display:block;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600}
+  .field input,.field select,.field textarea{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;outline:none;transition:.2s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#5b8def;box-shadow:0 0 0 3px rgba(91,141,239,.12)}
+  .field textarea{resize:vertical;min-height:70px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .photo-upload{border:2px dashed #2a2a2a;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s}
+  .photo-upload:hover{border-color:#5b8def;background:rgba(91,141,239,.05)}
+  .photo-upload input{display:none}
+  .photo-upload .lbl{color:#888;font-size:13px}
+  .photo-preview{max-width:100%;border-radius:8px;margin-top:12px;display:none}
+  .photo-preview.show{display:block}
+  .btn-primary{width:100%;background:#5b8def;color:#fff;border:none;padding:14px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;margin-top:8px}
+  .btn-primary:hover{background:#4070d6}
+  .btn-ghost{width:100%;background:transparent;border:1px solid #2a2a2a;color:#888;padding:12px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px}
+  .btn-ghost:hover{border-color:#5b8def;color:#5b8def}
+  .list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .list-header h2{font-size:20px}
+  .list-header .count{color:#666;font-size:14px}
+  .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .filter-chip{background:#111;border:1px solid #1a1a1a;color:#888;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s}
+  .filter-chip:hover{color:#fff;border-color:#2a2a2a}
+  .filter-chip.active{background:#5b8def;color:#fff;border-color:#5b8def}
+  .list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .item{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:16px;display:flex;gap:16px;transition:.2s}
+  .item:hover{border-color:#2a2a2a}
+  .item .thumb{width:90px;height:90px;background:#000;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#333;text-transform:uppercase;letter-spacing:1px;overflow:hidden}
+  .item .thumb img{width:100%;height:100%;object-fit:cover}
+  .item-body{flex:1;min-width:0}
+  .item-body h3{font-size:16px;margin-bottom:4px}
+  .item-body .meta{color:#666;font-size:12px;margin-bottom:8px}
+  .item-body .specs-mini{color:#888;font-size:12px;line-height:1.6}
+  .item-body .price{font-size:16px;font-weight:700;color:#5b8def;margin-top:8px}
+  .item-actions{display:flex;flex-direction:column;gap:6px}
+  .item-actions button{background:#1a1a1a;border:1px solid #2a2a2a;color:#888;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:.2s}
+  .item-actions button:hover{color:#fff;border-color:#5b8def}
+  .item-actions .del:hover{color:#ff4d6d;border-color:#ff4d6d}
+  .badge-default{display:inline-block;background:#1a1a1a;color:#666;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:uppercase;letter-spacing:.5px}
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#555}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#5b8def;color:#fff;padding:13px 24px;border-radius:10px;font-weight:600;font-size:14px;transition:.4s;z-index:300}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.success{background:#3fb950}
+  .toast.error{background:#ff4d6d}
+  @media (max-width:1000px){.wrap{grid-template-columns:1fr}.form-card{position:static;max-height:none}.list{grid-template-columns:1fr}}
+  @media (max-width:700px){
+    header{padding:14px 20px}
+    .wrap{padding:24px 20px}
+    .form-card{padding:22px}
+    h1{font-size:24px}
+    .field-row{grid-template-columns:1fr}
+    .item{flex-direction:column}
+    .item .thumb{width:100%;height:140px}
+    .item-actions{flex-direction:row}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span> · Админ</a>
+  <div class="header-right">
+    <a href="index.html" class="back-link">← На сайт</a>
+    <button class="logout" onclick="logout()">Выйти</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div>
+    <div class="cloud-card">
+      <h3>☁️ Облачное хранилище</h3>
+      <div class="status" id="cloudStatus">Проверка...</div>
+      <div class="row">
+        <input type="text" id="cloudIdInput" placeholder="ID облака">
+        <button onclick="saveCloudId()">Сохранить</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" onclick="createCloud()">Создать новое</button>
+        <button class="ghost" onclick="pullCloud()">Подтянуть с облака</button>
+      </div>
+      <div class="hint">Чтобы сборки видели все посетители сайта — создай облако, скопируй ID и вставь его в <b>transition.js</b> в строку <code>window.TB_CLOUD_ID = '';</code></div>
+    </div>
+
+    <div class="form-card">
+      <h2 id="form-title">Добавить сборку</h2>
+      <form id="buildForm" onsubmit="event.preventDefault(); saveBuild();">
+        <input type="hidden" id="edit-id">
+        <div class="field"><label>Название</label><input type="text" id="f-name" required></div>
+        <div class="field-row">
+          <div class="field"><label>Категория</label>
+            <select id="f-category" required>
+              <option value="fullhd">Full HD</option>
+              <option value="2k">2K</option>
+              <option value="4k">4K</option>
+              <option value="office">Офис</option>
+            </select>
+          </div>
+          <div class="field"><label>Цена, ₽</label><input type="number" id="f-price" required></div>
+        </div>
+        <div class="field"><label>Описание</label><input type="text" id="f-desc"></div>
+        <div class="field"><label>Процессор</label><input type="text" id="f-cpu"></div>
+        <div class="field"><label>Материнская плата</label><input type="text" id="f-motherboard"></div>
+        <div class="field"><label>Видеокарта</label><input type="text" id="f-gpu"></div>
+        <div class="field-row">
+          <div class="field"><label>Память</label><input type="text" id="f-ram"></div>
+          <div class="field"><label>Диски</label><input type="text" id="f-storage"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>БП</label><input type="text" id="f-psu"></div>
+          <div class="field"><label>Корпус</label><input type="text" id="f-case"></div>
+        </div>
+        <div class="field"><label>Охлаждение</label><input type="text" id="f-cooling"></div>
+        <div class="field">
+          <label>Фото</label>
+          <div class="photo-upload" onclick="document.getElementById('f-photo').click()">
+            <input type="file" id="f-photo" accept="image/*" onchange="handlePhoto(this)">
+            <div class="lbl" id="photo-label">Нажми, чтобы загрузить</div>
+            <img class="photo-preview" id="photo-preview" alt="">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary"><span id="submit-text">Добавить сборку</span></button>
+        <button type="button" class="btn-ghost" onclick="resetForm()">Очистить форму</button>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <div class="list-header"><h2>Сборки в базе</h2><span class="count" id="count">Всего: 0</span></div>
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter(this,'all')">Все</button>
+      <button class="filter-chip" onclick="setFilter(this,'user')">Мои</button>
+      <button class="filter-chip" onclick="setFilter(this,'fullhd')">Full HD</button>
+      <button class="filter-chip" onclick="setFilter(this,'2k')">2K</button>
+      <button class="filter-chip" onclick="setFilter(this,'4k')">4K</button>
+      <button class="filter-chip" onclick="setFilter(this,'office')">Офис</button>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Готово</div>
+
+<script src="transition.js"></script>
+<script>
+// ===== ПРОВЕРКА ПАРОЛЯ =====
+(function checkAccess() {
+  const unlocked = localStorage.getItem('tb_admin_unlocked');
+  if (unlocked) {
+    const age = Date.now() - parseInt(unlocked);
+    if (age <= 2 * 60 * 60 * 1000) return;
+    localStorage.removeItem('tb_admin_unlocked');
+  }
+  const pass = prompt('Введите пароль администратора:');
+  if (pass === 'test123') {
+    localStorage.setItem('tb_admin_unlocked', Date.now().toString());
+  } else {
+    alert('Неверный пароль');
+    location.href = 'index.html';
+  }
+})();
+
+function logout() {
+  if (!confirm('Выйти из админки?')) return;
+  localStorage.removeItem('tb_admin_unlocked');
+  location.href = 'index.html';
+}
+
+// ===== ОБЛАКО =====
+function updateCloudStatus() {
+  const id = PCBuilds.getCloudId();
+  const s = document.getElementById('cloudStatus');
+  if (id) {
+    s.textContent = '✅ Облако подключено · ID: ' + id;
+    s.classList.remove('off');
+    document.getElementById('cloudIdInput').value = id;
+  } else {
+    s.textContent = '⚠️ Облако не подключено (данные только в этом браузере)';
+    s.classList.add('off');
+  }
+}
+async function createCloud() {
+  const id = await PCBuilds.createCloud();
+  if (id) { updateCloudStatus(); showToast('Облако создано! Скопируй ID в transition.js', true); }
+  else showToast('Не удалось создать', false, true);
+}
+async function saveCloudId() {
+  const v = document.getElementById('cloudIdInput').value.trim();
+  if (!v) { showToast('Введи ID'); return; }
+  PCBuilds.setCloudId(v);
+  updateCloudStatus();
+  await pullCloud();
+  showToast('ID сохранён', true);
+}
+async function pullCloud() {
+  const ok = await PCBuilds.syncFromCloud();
+  if (ok) { render(); showToast('Данные подтянуты', true); }
+  else showToast('Не удалось подтянуть');
+}
+
+// ===== СПИСОК =====
+let currentFilter = 'all';
+function render() {
+  const all = PCBuilds.getAll();
+  const userIds = PCBuilds.getUserBuilds().map(b => b.id);
+  let items = all;
+  if (currentFilter === 'user') items = all.filter(b => userIds.includes(b.id));
+  else if (currentFilter !== 'all') items = all.filter(b => b.category === currentFilter);
+  document.getElementById('count').textContent = 'Всего: ' + all.length;
+  const list = document.getElementById('list');
+  if (!items.length) { list.innerHTML = '<div class="empty">Пока ничего нет</div>'; return; }
+  list.innerHTML = items.map(b => {
+    const isDefault = !userIds.includes(b.id);
+    return `
+      <div class="item">
+        <div class="thumb">${b.photo ? `<img src="${b.photo}" alt="">` : 'Фото'}</div>
+        <div class="item-body">
+          <h3>${b.name}${isDefault ? '<span class="badge-default">default</span>' : ''}</h3>
+          <div class="meta">${b.tag || b.category} · ${b.desc || ''}</div>
+          <div class="specs-mini">${[b.cpu, b.gpu, b.ram].filter(Boolean).join(' · ')}</div>
+          <div class="price">${b.price.toLocaleString('ru-RU')} ₽</div>
+        </div>
+        <div class="item-actions">
+          ${isDefault ? '' : `
+            <button onclick="editBuild('${b.id}')" title="Ред.">✎</button>
+            <button class="del" onclick="deleteBuild('${b.id}')" title="Удалить">×</button>
+          `}
+        </div>
+      </div>`;
+  }).join('');
+}
+function setFilter(el, f) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = f;
+  render();
+}
+
+// ===== ФОТО =====
+let photoData = '', editPhoto = '';
+function handlePhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 800000) { showToast('Макс 800 КБ', false, true); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    photoData = e.target.result;
+    const p = document.getElementById('photo-preview');
+    p.src = photoData;
+    p.classList.add('show');
+    document.getElementById('photo-label').textContent = 'Фото загружено';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===== СОХРАНЕНИЕ =====
+function saveBuild() {
+  const editId = document.getElementById('edit-id').value;
+  const cat = document.getElementById('f-category').value;
+  const tagMap = { fullhd:'Full HD', '2k':'2K', '4k':'4K', office:'Офис' };
+  const b = {
+    name: document.getElementById('f-name').value.trim(),
+    category: cat,
+    tag: tagMap[cat],
+    price: parseInt(document.getElementById('f-price').value),
+    desc: document.getElementById('f-desc').value.trim(),
+    cpu: document.getElementById('f-cpu').value.trim(),
+    motherboard: document.getElementById('f-motherboard').value.trim(),
+    gpu: document.getElementById('f-gpu').value.trim(),
+    ram: document.getElementById('f-ram').value.trim(),
+    storage: document.getElementById('f-storage').value.trim(),
+    psu: document.getElementById('f-psu').value.trim(),
+    case: document.getElementById('f-case').value.trim(),
+    cooling: document.getElementById('f-cooling').value.trim(),
+    photo: photoData || editPhoto || ''
+  };
+  if (editId) { PCBuilds.update(editId, b); showToast('Сборка обновлена', true); }
+  else { PCBuilds.add(b); showToast('Сборка добавлена', true); }
+  resetForm();
+  render();
+}
+function editBuild(id) {
+  const b = PCBuilds.getAll().find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('f-name').value = b.name || '';
+  document.getElementById('f-category').value = b.category || 'fullhd';
+  document.getElementById('f-price').value = b.price || '';
+  document.getElementById('f-desc').value = b.desc || '';
+  document.getElementById('f-cpu').value = b.cpu || '';
+  document.getElementById('f-motherboard').value = b.motherboard || '';
+  document.getElementById('f-gpu').value = b.gpu || '';
+  document.getElementById('f-ram').value = b.ram || '';
+  document.getElementById('f-storage').value = b.storage || '';
+  document.getElementById('f-psu').value = b.psu || '';
+  document.getElementById('f-case').value = b.case || '';
+  document.getElementById('f-cooling').value = b.cooling || '';
+  editPhoto = b.photo || '';
+  photoData = '';
+  if (b.photo) {
+    document.getElementById('photo-preview').src = b.photo;
+    document.getElementById('photo-preview').classList.add('show');
+    document.getElementById('photo-label').textContent = 'Фото загружено';
+  }
+  document.getElementById('form-title').textContent = 'Редактировать сборку';
+  document.getElementById('submit-text').textContent = 'Сохранить';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function deleteBuild(id) {
+  if (!confirm('Удалить?')) return;
+  PCBuilds.remove(id);
+  showToast('Удалено');
+  render();
+}
+function resetForm() {
+  document.getElementById('buildForm').reset();
+  document.getElementById('edit-id').value = '';
+  document.getElementById('form-title').textContent = 'Добавить сборку';
+  document.getElementById('submit-text').textContent = 'Добавить сборку';
+  document.getElementById('photo-preview').classList.remove('show');
+  document.getElementById('photo-label').textContent = 'Нажми, чтобы загрузить';
+  photoData = ''; editPhoto = '';
+}
+function showToast(text, success, error) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.className = 'toast show' + (success ? ' success' : '') + (error ? ' error' : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => { t.className = 'toast'; }, 2400);
+}
+
+(async () => {
+  updateCloudStatus();
+  await PCBuilds.syncFromCloud();
+  render();
+})();
+</script>
+
+</body>
+</html>

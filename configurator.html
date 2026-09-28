@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конфигуратор ПК — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  button{font-family:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px;align-items:center}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px;transition:.2s}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+  .page-head{padding:60px 40px 20px;max-width:1400px;margin:0 auto}
+  .page-head h1{font-size:44px;font-weight:800;letter-spacing:-1.5px}
+  .page-head h1 span{color:#5b8def}
+  .page-head p{color:#888;font-size:16px;margin-top:12px;max-width:560px}
+  .builder{max-width:1400px;margin:0 auto;padding:20px 40px 80px;display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
+  .steps{display:flex;flex-direction:column;gap:16px}
+  .step{background:#111;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden;transition:.2s}
+  .step.active{border-color:#5b8def}
+  .step-head{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+  .step-head .left{display:flex;align-items:center;gap:16px}
+  .step-num{width:32px;height:32px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#888}
+  .step.active .step-num,.step.done .step-num{background:#5b8def;color:#fff}
+  .step-head h3{font-size:16px;font-weight:600}
+  .step-head .selected{color:#5b8def;font-size:13px;margin-top:2px}
+  .step-head .right{color:#888;font-size:14px}
+  .step-head .right.picked{color:#fff;font-weight:600}
+  .step-body{max-height:0;overflow:hidden;transition:max-height .35s;border-top:1px solid transparent}
+  .step.active .step-body{max-height:2000px;border-top-color:#1a1a1a}
+  .options{padding:8px 0}
+  .option{padding:14px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:.15s;border-bottom:1px solid #161616;gap:16px}
+  .option:last-child{border-bottom:none}
+  .option:hover{background:#161616}
+  .option.selected{background:rgba(91,141,239,.08)}
+  .option .info{display:flex;align-items:center;gap:14px}
+  .option .radio{width:18px;height:18px;border:2px solid #2a2a2a;border-radius:50%;flex-shrink:0;position:relative;transition:.2s}
+  .option.selected .radio{border-color:#5b8def}
+  .option.selected .radio::after{content:"";position:absolute;inset:3px;background:#5b8def;border-radius:50%}
+  .option .name{font-size:15px}
+  .option .sub{color:#666;font-size:12px;margin-top:2px}
+  .option .price{color:#fff;font-weight:600;font-size:14px;white-space:nowrap}
+  .summary{position:sticky;top:100px;background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:24px}
+  .summary h3{font-size:18px;margin-bottom:20px}
+  .summary-list{margin-bottom:20px}
+  .summary-row{display:flex;justify-content:space-between;padding:10px 0;font-size:13px;border-bottom:1px solid #161616;gap:12px}
+  .summary-row:last-child{border-bottom:none}
+  .summary-row .lbl{color:#666}
+  .summary-row .val{color:#aaa;text-align:right;max-width:60%}
+  .summary-row .val.picked{color:#fff}
+  .total{padding:16px 0;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;margin:16px 0 20px;display:flex;justify-content:space-between;align-items:center}
+  .total .lbl{color:#888;font-size:14px}
+  .total .amount{font-size:26px;font-weight:800;letter-spacing:-1px}
+  .summary .btn{width:100%;background:#5b8def;color:#fff;border:none;padding:15px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;margin-bottom:8px}
+  .summary .btn:hover{background:#4070d6}
+  .summary .btn.ghost{background:transparent;border:1px solid #2a2a2a;color:#888}
+  .summary .btn.ghost:hover{border-color:#5b8def;color:#5b8def}
+  .compat{background:#0f1a0f;border:1px solid #1e3a1e;color:#3fb950;padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:16px;text-align:center}
+  .compat.warn{background:#1a150f;border-color:#3a2a1e;color:#d4a843}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px;margin-top:60px}
+  .footer-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px;font-weight:700}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;margin-top:14px}
+  .footer-bottom{max-width:1400px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#5b8def;color:#fff;padding:13px 24px;border-radius:10px;font-weight:600;font-size:14px;transition:.3s;z-index:300}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (max-width:1000px){.builder{grid-template-columns:1fr}.summary{position:static}}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .page-head{padding:40px 20px 10px}
+    .page-head h1{font-size:30px}
+    .builder{padding:10px 20px 50px}
+    .option{padding:12px 18px}
+    .option .name{font-size:14px}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html" class="active">Конфигуратор</a>
+    <a href="cart.html">Корзина</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+</header>
+
+<div class="page-head">
+  <h1>Собери свой <span>ПК</span> сам</h1>
+  <p>Выбирай комплектующие по шагам — система проверит совместимость и посчитает итог.</p>
+</div>
+
+<div class="builder">
+  <div class="steps" id="steps"></div>
+  <div class="summary">
+    <h3>Твоя сборка</h3>
+    <div class="compat" id="compat">Все комплектующие совместимы</div>
+    <div class="summary-list" id="summary-list"></div>
+    <div class="total"><span class="lbl">Итого</span><span class="amount" id="total">0 ₽</span></div>
+    <button class="btn" onclick="addBuildToCart()">Добавить сборку в корзину</button>
+    <button class="btn ghost" onclick="resetBuilder()">Сбросить всё</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<div class="toast" id="toast">Готово</div>
+
+<script src="transition.js"></script>
+<script>
+const PARTS = {
+  cpu:{title:'Процессор',items:[
+    {id:'i3-12100',name:'Intel Core i3-12100',sub:'4 ядра · LGA1700',price:8900,socket:'LGA1700',tdp:60,ram:'both'},
+    {id:'i5-12400',name:'Intel Core i5-12400',sub:'6 ядер · LGA1700',price:14000,socket:'LGA1700',tdp:65,ram:'both'},
+    {id:'r5-5600',name:'AMD Ryzen 5 5600',sub:'6 ядер · AM4',price:12000,socket:'AM4',tdp:65,ram:'ddr4'},
+    {id:'r5-7500f',name:'AMD Ryzen 5 7500F',sub:'6 ядер · AM5',price:15900,socket:'AM5',tdp:65,ram:'ddr5'},
+    {id:'r7-7800x3d',name:'AMD Ryzen 7 7800X3D',sub:'8 ядер · AM5',price:35000,socket:'AM5',tdp:120,ram:'ddr5'},
+    {id:'r9-7900x',name:'AMD Ryzen 9 7900X',sub:'12 ядер · AM5',price:45000,socket:'AM5',tdp:170,ram:'ddr5'}
+  ]},
+  motherboard:{title:'Материнская плата',items:[
+    {id:'mb-h610',name:'ASUS Prime H610M',sub:'LGA1700 · DDR4',price:7500,socket:'LGA1700',ram:'ddr4'},
+    {id:'mb-b660',name:'MSI B660M Pro',sub:'LGA1700 · DDR4',price:11000,socket:'LGA1700',ram:'ddr4'},
+    {id:'mb-b550',name:'MSI B550M Pro-VDH',sub:'AM4 · DDR4',price:8500,socket:'AM4',ram:'ddr4'},
+    {id:'mb-b650',name:'MSI B650 Tomahawk',sub:'AM5 · DDR5',price:18400,socket:'AM5',ram:'ddr5'},
+    {id:'mb-x670',name:'ASUS TUF X670E-Plus',sub:'AM5 · DDR5',price:32000,socket:'AM5',ram:'ddr5'}
+  ]},
+  ram:{title:'Оперативная память',items:[
+    {id:'ram-16-d4',name:'16GB DDR4 3200',sub:'2×8GB',price:4200,ram:'ddr4'},
+    {id:'ram-32-d4',name:'32GB DDR4 3600',sub:'2×16GB',price:8000,ram:'ddr4'},
+    {id:'ram-32-d5',name:'32GB DDR5 6000',sub:'2×16GB',price:10500,ram:'ddr5'},
+    {id:'ram-64-d5',name:'64GB DDR5 6000',sub:'2×32GB',price:21000,ram:'ddr5'}
+  ]},
+  gpu:{title:'Видеокарта',items:[
+    {id:'gpu-3050',name:'RTX 3050 8GB',sub:'Для 1080p',price:20000,tdp:130},
+    {id:'gpu-3060',name:'RTX 3060 12GB',sub:'Для 1080p / 1440p',price:28000,tdp:170},
+    {id:'gpu-4060',name:'RTX 4060 8GB',sub:'Для 1440p',price:32500,tdp:115},
+    {id:'gpu-4070s',name:'RTX 4070 Super 12GB',sub:'Для 1440p / 4K',price:62000,tdp:220},
+    {id:'gpu-4080s',name:'RTX 4080 Super 16GB',sub:'Для 4K',price:115000,tdp:320},
+    {id:'gpu-4090',name:'RTX 4090 24GB',sub:'Для 4K на максималках',price:210000,tdp:450}
+  ]},
+  storage:{title:'Накопитель',items:[
+    {id:'ssd-512',name:'512GB NVMe',sub:'PCIe 4.0',price:3500},
+    {id:'ssd-1tb',name:'1TB NVMe',sub:'PCIe 4.0 · 7000 МБ/с',price:7200},
+    {id:'ssd-2tb',name:'2TB NVMe',sub:'PCIe 4.0 · 7000 МБ/с',price:13000},
+    {id:'ssd-4tb',name:'4TB NVMe',sub:'PCIe 4.0 · 7000 МБ/с',price:28000}
+  ]},
+  psu:{title:'Блок питания',items:[
+    {id:'psu-550',name:'550W 80+ Bronze',sub:'Для сборок до 300 Вт',price:3500,power:550},
+    {id:'psu-650',name:'650W 80+ Bronze',sub:'Для сборок до 450 Вт',price:4500,power:650},
+    {id:'psu-750',name:'750W 80+ Gold',sub:'Модульный',price:8500,power:750},
+    {id:'psu-1000',name:'1000W 80+ Gold',sub:'Модульный · мощные сборки',price:14000,power:1000}
+  ]},
+  case:{title:'Корпус',items:[
+    {id:'case-mini',name:'Mini Tower',sub:'Micro-ATX · компактный',price:3000},
+    {id:'case-mid',name:'Mid Tower',sub:'ATX · стандартный',price:5000},
+    {id:'case-big',name:'Full Tower с продувом',sub:'ATX · 4 вентилятора',price:8500}
+  ]},
+  cooling:{title:'Охлаждение',items:[
+    {id:'cool-box',name:'Боксовый кулер',sub:'Стандартный',price:0},
+    {id:'cool-tower',name:'Башенный кулер',sub:'Для средних сборок',price:3500},
+    {id:'cool-aio240',name:'Водянка 240',sub:'СЖО 240 мм',price:8500},
+    {id:'cool-aio360',name:'Водянка 360',sub:'СЖО 360 мм',price:14000}
+  ]}
+};
+
+const build={cpu:null,motherboard:null,ram:null,gpu:null,storage:null,psu:null,case:null,cooling:null};
+
+function render(){
+  const stepsEl=document.getElementById('steps');
+  const keys=Object.keys(PARTS);
+  stepsEl.innerHTML=keys.map((key,i)=>{
+    const part=PARTS[key],selected=build[key];
+    return `
+      <div class="step ${selected?'done':''}" id="step-${key}">
+        <div class="step-head" onclick="toggleStep('${key}')">
+          <div class="left">
+            <div class="step-num">${i+1}</div>
+            <div>
+              <h3>${part.title}</h3>
+              ${selected?`<div class="selected">${selected.name}</div>`:''}
+            </div>
+          </div>
+          <div class="right ${selected?'picked':''}">${selected?selected.price.toLocaleString('ru-RU')+' ₽':'—'}</div>
+        </div>
+        <div class="step-body">
+          <div class="options">
+            ${getAvailable(key).map(opt=>`
+              <div class="option ${selected&&selected.id===opt.id?'selected':''}" onclick="pickPart('${key}','${opt.id}')">
+                <div class="info">
+                  <div class="radio"></div>
+                  <div><div class="name">${opt.name}</div><div class="sub">${opt.sub}</div></div>
+                </div>
+                <div class="price">${opt.price.toLocaleString('ru-RU')} ₽</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  updateSummary();
+}
+
+function getAvailable(key){
+  const items=PARTS[key].items;
+  if(key==='motherboard'&&build.cpu) return items.filter(i=>i.socket===build.cpu.socket);
+  if(key==='ram'){
+    if(build.motherboard) return items.filter(i=>i.ram===build.motherboard.ram);
+    if(build.cpu) return items.filter(i=>i.ram===build.cpu.ram||build.cpu.ram==='both');
+  }
+  return items;
+}
+
+function pickPart(key,id){
+  const item=PARTS[key].items.find(i=>i.id===id);
+  if(!item) return;
+  build[key]=item;
+  if(key==='cpu'&&build.motherboard&&build.motherboard.socket!==item.socket){
+    build.motherboard=null; showToast('Материнка сброшена — другой сокет');
+  }
+  if(key==='motherboard'&&build.ram&&build.ram.ram!==item.ram){
+    build.ram=null; showToast('Память сброшена — другой тип');
+  }
+  render();
+  const keys=Object.keys(PARTS),idx=keys.indexOf(key);
+  if(keys[idx+1]) openStep(keys[idx+1]);
+}
+
+function toggleStep(key){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step-'+key).classList.add('active');
+}
+function openStep(key){
+  if(!key) return;
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('step-'+key);
+  if(el) el.classList.add('active');
+}
+
+function updateSummary(){
+  const list=document.getElementById('summary-list');
+  const keys=Object.keys(PARTS);
+  list.innerHTML=keys.map(k=>{
+    const p=build[k];
+    return `<div class="summary-row"><span class="lbl">${PARTS[k].title}</span><span class="val ${p?'picked':''}">${p?p.name:'Не выбран'}</span></div>`;
+  }).join('');
+  const total=keys.reduce((s,k)=>s+(build[k]?build[k].price:0),0);
+  document.getElementById('total').textContent=total.toLocaleString('ru-RU')+' ₽';
+  const compat=document.getElementById('compat');
+  if(build.psu&&(build.cpu||build.gpu)){
+    const need=(build.cpu?build.cpu.tdp:0)+(build.gpu?build.gpu.tdp:0)+100;
+    if(need>build.psu.power){compat.textContent='⚠️ БП может не хватить';compat.classList.add('warn')}
+    else{compat.textContent='Все комплектующие совместимы';compat.classList.remove('warn')}
+  } else {compat.textContent='Все комплектующие совместимы';compat.classList.remove('warn')}
+}
+
+function addBuildToCart(){
+  const keys=Object.keys(PARTS);
+  const chosen=keys.filter(k=>build[k]);
+  if(!chosen.length){showToast('Выбери хотя бы одну деталь');return}
+  const total=keys.reduce((s,k)=>s+(build[k]?build[k].price:0),0);
+  showToast('Сборка добавлена · '+total.toLocaleString('ru-RU')+' ₽');
+}
+function resetBuilder(){
+  Object.keys(build).forEach(k=>build[k]=null);
+  render(); showToast('Сборка сброшена');
+}
+function showToast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove('show'),2400)}
+
+render();
+document.getElementById('step-cpu').classList.add('active');
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+</script>
+
+</body>
+</html>

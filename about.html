@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>О компании — TechBuild</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6}
+  a{text-decoration:none;color:inherit}
+  header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;position:sticky;top:0;background:rgba(10,10,10,.95);backdrop-filter:blur(10px);z-index:100}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:#5b8def}
+  nav{display:flex;gap:4px}
+  nav a{color:#888;font-size:14px;padding:9px 16px;border-radius:8px}
+  nav a:hover,nav a.active{color:#fff;background:#1a1a1a}
+  .burger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+  .wrap{max-width:900px;margin:0 auto;padding:60px 40px 80px}
+  h1{font-size:44px;font-weight:800;letter-spacing:-1.5px;margin-bottom:20px}
+  h1 span{color:#5b8def}
+  .lead{color:#888;font-size:18px;margin-bottom:40px}
+  h2{font-size:24px;margin:40px 0 14px}
+  p{color:#bbb;margin-bottom:14px}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0}
+  .fact{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:22px;text-align:center}
+  .fact .num{font-size:30px;font-weight:800;color:#5b8def;letter-spacing:-1px}
+  .fact .lbl{color:#888;font-size:13px;margin-top:6px}
+  footer{border-top:1px solid #1a1a1a;padding:50px 40px 30px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  footer h4{font-size:14px;margin-bottom:16px}
+  footer a{color:#888;font-size:14px;display:block;margin-bottom:10px}
+  footer a:hover{color:#5b8def}
+  footer p{color:#555;font-size:13px;margin-top:14px}
+  .footer-bottom{max-width:1200px;margin:36px auto 0;padding-top:22px;border-top:1px solid #1a1a1a;color:#444;font-size:12px}
+  @media (max-width:900px){
+    header{padding:14px 20px}
+    nav{display:none}
+    .burger{display:block}
+    nav.mobile-open{display:flex;position:absolute;top:100%;left:0;right:0;background:#111;flex-direction:column;padding:16px;border-bottom:1px solid #1a1a1a;gap:4px}
+    nav.mobile-open a{padding:12px 16px}
+    .wrap{padding:40px 20px 60px}
+    h1{font-size:30px}
+    .facts{grid-template-columns:1fr}
+    footer{padding:36px 20px 24px}
+    .footer-inner{grid-template-columns:1fr;gap:28px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">TECH<span>BUILD</span></a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('mobile-open')">☰</button>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="fullhd.html">Full HD</a>
+    <a href="2k.html">2K</a>
+    <a href="4k.html">4K</a>
+    <a href="catalog.html">Комплектующие</a>
+    <a href="configurator.html">Конфигуратор</a>
+    <a href="cart.html">Корзина</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1>О <span>TechBuild</span></h1>
+  <p class="lead">Собираем ПК с 2020 года. За это время через наши руки прошло больше 2400 машин — от офисных до 4K-монстров.</p>
+
+  <div class="facts">
+    <div class="fact"><div class="num">2 400+</div><div class="lbl">Собранных ПК</div></div>
+    <div class="fact"><div class="num">3 года</div><div class="lbl">Гарантия</div></div>
+    <div class="fact"><div class="num">4.9</div><div class="lbl">Средняя оценка</div></div>
+  </div>
+
+  <h2>Что мы делаем</h2>
+  <p>Собираем готовые конфигурации под игры, работу и монтаж. Или собираем индивидуально — под конкретный бюджет. Проверяем совместимость, тестируем под нагрузкой, упаковываем так, чтобы доехало без царапин.</p>
+
+  <h2>Как мы работаем</h2>
+  <p>Без «менеджеров по продажам» и впаривания лишнего. Если за 20 тысяч реально собрать только офисник — так и скажем. Если хватит 60 тысяч, а не 120 — предложим вариант за 60. Наша цель — чтобы вы вернулись и посоветовали нас друзьям.</p>
+
+  <h2>Гарантия</h2>
+  <p>3 года на сборку и от 1 до 3 лет на комплектующие. Если что-то сломалось — диагностируем, чиним или меняем. Без «это не наш вопрос».</p>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="logo">TECH<span>BUILD</span></div><p>Сборка и продажа ПК с 2020 года.</p></div>
+    <div><h4>Магазин</h4><a href="fullhd.html">Full HD</a><a href="2k.html">2K</a><a href="4k.html">4K</a></div>
+    <div><h4>Помощь</h4><a href="delivery.html">Доставка</a><a href="about.html">О компании</a><a href="contacts.html">Контакты</a></div>
+    <div><h4>Контакты</h4><a href="tel:+79991234567">+7 (999) 123-45-67</a><a href="mailto:info@techbuild.ru">info@techbuild.ru</a></div>
+  </div>
+  <div class="footer-bottom"><span data-admin-trigger style="cursor:default">© 2026 TechBuild. Все права защищены.</span></div>
+</footer>
+
+<script src="transition.js"></script>
+<script>
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('mobile-open')));
+</script>
+
+</body>
+</html>
